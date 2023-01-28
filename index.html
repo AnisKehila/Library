@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/dist/output.css" rel="stylesheet">
+    <title>Library</title>
+</head>
+<body class="bg-gray-100">
+    <header class="w-full py-6 bg-white shadow-md flex justify-around items-center">
+        <p class="text-3xl font-semibold">Library</p>
+        <button class="bg-green-500 px-4 py-3 text-slate-50 rounded-sm text-xl hover:bg-green-700 transition duration-300" id="add-book"> Add book</button>
+    </header>
+    <!-- Pop UP form -->
+    <div class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-75 hidden transition duration-500 items-center justify-center" id="pop-up">
+        <form class="bg-white p-6 rounded-lg" id="add-book-form">
+            <h2 class="text-lg font-medium">Add book</h2>
+            <div class="my-4 w-full">
+                <input class="border border-gray-400 p-2 rounded-lg" type="text" placeholder="Title" id="title" required>
+                <span class=" text-red-600 text-center text-sm block mt-2" id="add-book-note"></span>
+            </div>
+            <div class="my-4">
+                <input class="border border-gray-400 p-2 rounded-lg" type="text" placeholder="Author" id="author" required>
+            </div>
+            <div class="my-4">
+                <input class="border border-gray-400 p-2 rounded-lg" type="number" placeholder="Number of pages" id="pages" required>
+            </div>
+            <div class="my-4 flex justify-between items-center">
+                <label for="isRead" class="cursor-pointer">
+                    Have you read this book?
+                </label>
+                <input class="bg-red-100 border-red-300 text-red-500 checked:text-green-500" type="checkbox" id="isRead">
+            </div>
+            <div class="my-4 flex justify-between">
+                <button class="bg-green-500 py-2 px-4 rounded-lg text-white m-auto" id="submit">Add Book</button>
+            </div>
+        </form>
+    </div>
+    <!-- Books list -->
+    <div class="container mt-10 m-auto">
+        <ul id="books-list" class="grid grid-cols-4 gap-10 w-full">
+
+        </ul>
+    </div>
+    <script src="src/main.js"></script>
+</body>
+</html>
