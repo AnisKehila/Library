@@ -8,9 +8,6 @@ const isReadInput = document.querySelector('#isRead');
 const addBookSubmit = document.querySelector('#submit');
 const addBookNote = document.querySelector('#add-book-note');
 const booksList = document.querySelector('#books-list');
-let myLibrary = [];
-appendLibraryToDom();
-
 class Book {
     constructor(title,author,numberOfPages,isRead) {
         this.title = title;
@@ -22,6 +19,16 @@ class Book {
         return `${this.title} by ${this.author}, ${this.numberOfPages} pages, ${this.isRead ? "already read": "not read yet"}`;
     }
 }
+let myLibrary = [];
+appendLibraryToDom();
+
+function appendLibraryToDom() {
+    for(let book of myLibrary) {
+        booksList.appendChild(bookBox(book.title, book.author, book.numberOfPages, book.isRead));
+    }
+}
+
+
 //add pop up handler 
 function showAddPopUp() {
     if(addPopUp.classList.contains('hidden')) {
@@ -40,15 +47,23 @@ window.addEventListener('click' , (click) => {
     if(addPopUp.classList.contains('flex')) {
         if(click.target === addPopUp) {
             hideAddPopUp();
+            resetForm();
         }
     }
 });
-
+// form reset function
+function resetForm() {
+    titleInput.value = '';
+    authorInput.value = '';
+    pagesInput.value = '';
+    isReadInput.checked = false;
+}
 // Add book form handler 
 function addBookToLibrary() {
     let newBook = new Book(titleInput.value , authorInput.value , pagesInput.value , isReadInput.checked);
     if(myLibrary.push(newBook)) {
         hideAddPopUp();
+
     }
     console.log(myLibrary);
 }
@@ -68,6 +83,7 @@ addBookSubmit.addEventListener('click', (e) => {
         }
         addBookToLibrary();
         appendBookToDom();
+        resetForm();
     }
 });
 // append books to dom
@@ -94,8 +110,8 @@ function bookBox(bookTitle, bookAuthor, bookNumPages, bookIsRead) {
     ul.appendChild(bookNumPagesLi);
 
     let bookIsReadLi = document.createElement('li');
-    bookIsReadLi.className += 'w-full';
-    bookIsReadLi.id = 'read-book';
+    bookIsReadLi.className += 'w-full read-book';
+    bookIsReadLi.setAttribute('data-title' , bookTitle);
     let bookIsReadBtn = document.createElement('button');
     bookIsReadBtn.className += 'border rounded-lg bg-green-600 hover:bg-green-500 text-white  py-2 w-full';
     if(bookIsRead) {
@@ -104,21 +120,39 @@ function bookBox(bookTitle, bookAuthor, bookNumPages, bookIsRead) {
         bookIsReadBtn.appendChild(document.createTextNode('Not Read'));
     }
     bookIsReadLi.appendChild(bookIsReadBtn);
+    bookIsReadLi.addEventListener('click' , () => {
+        readToggle(bookTitle);
+        bookIsReadBtn.innerText === "Read" ? bookIsReadBtn.innerText = "Not Read" : bookIsReadBtn.innerText = "Read";
+    });
     ul.appendChild(bookIsReadLi);
 
     let delLi = document.createElement('li');
-    delLi.className += 'w-full'
-    delLi.id = 'delete-book';
+    delLi.className += 'w-full delete-book';
     let delBtn = document.createElement('button');
     delBtn.appendChild(document.createTextNode('Delete'));
-    delBtn.className += "border rounded-lg bg-red-600 hover:bg-red-500 text-white  py-2 w-full";
+    delBtn.className += "border rounded-lg bg-red-600 hover:bg-red-500 text-white py-2 w-full";
     delLi.appendChild(delBtn);
+    delLi.setAttribute('data-title' , bookTitle);
     ul.appendChild(delLi);
     list.appendChild(ul);
+    delLi.addEventListener('click' , () => {
+        delBook(bookTitle);
+        list.remove();
+    });
     return list;
 }
-function appendLibraryToDom() {
-    for(let book of myLibrary) {
-        booksList.appendChild(bookBox(book.title, book.author, book.numberOfPages, book.isRead));
-    }
+
+function delBook(bookTitle) {
+    myLibrary.forEach(book => {
+        if(book.title === bookTitle) {
+            myLibrary.splice(myLibrary.indexOf(book.title), 1);
+        }
+    })
+}
+function readToggle(bookTitle) {
+    myLibrary.forEach(book => {
+        if(book.title === bookTitle) {
+            book.isRead=== true ? book.isRead = false : book.isRead = true;
+        }
+    })
 }
